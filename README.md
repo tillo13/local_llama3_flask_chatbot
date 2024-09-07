@@ -1,6 +1,6 @@
 # Ollama Image and Conversation Bot
 
-Ollama Image and Conversation Bot is an innovative application designed to generate image descriptions and engage in conversation through advanced AI models. Utilizing the Ollama platform, this bot leverages deep learning models for both image analysis and conversational AI. The application is structured across multiple Python files and directories to ensure seamless execution and maintainability.
+Ollama Image and Conversation Bot is an innovative application designed to generate image descriptions and engage in conversation through advanced AI models using a Flask web interface. Utilizing the Ollama platform, this bot leverages deep learning models for both image analysis and conversational AI, offering a seamless and interactive user experience.
 
 ## Directory Structure
 
@@ -10,71 +10,48 @@ The project is structured as follows:
 .
 |-- __pycache__
 |-- screenshots
-|-- ollama [excluded from files_within.txt]
-|-- ollama/lib [excluded from files_within.txt]
-|-- ollama/lib/ollama [excluded from files_within.txt]
-|-- ollama/lib/ollama/rocblas [excluded from files_within.txt]
-|-- ollama/lib/ollama/rocblas/library [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners/cpu [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners/cpu_avx [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners/cpu_avx2 [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners/cuda_v11 [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners/cuda_v12 [excluded from files_within.txt]
-|-- ollama/lib/ollama/runners/rocm_v6.1 [excluded from files_within.txt]
-|-- screenshots
-|   |-- image1.png
-|   |-- image2.png
+|   |-- local1.png
+|   |-- local2.png
+|-- templates
+|   |-- index.html
+|-- app.py
+|-- ollama_utils.py
 ```
 
 ## Python Files
 
-The application is composed of six primary Python files, each responsible for different functionalities:
+The application comprises two primary Python files, along with an HTML template for the web interface:
 
-1. **choose_model.py**: 
-   - **Purpose**: Handles model selection, generates image descriptions, and manages conversation history.
+1. **app.py**:
+   - **Purpose**: Serves as the main application file, setting up a Flask web server to handle user interactions and generate responses.
    - **Functionality**:
-     - Initializes conversations by processing an initial image.
-     - Uses text-based models to continue the dialogue.
-     - Manages conversation history with functions to save, load, and reset.
-     - Commands to set up and manage the Ollama service.
+     - Initializes the Flask app and sets up configuration and routes.
+     - Handles file uploads, user inputs, and system prompt updates.
+     - Converts user inputs into prompts for the Ollama models and gathers responses.
+     - Manages conversation history and session states to ensure coherent conversation flow.
+     - Provides endpoints for resetting conversations and updating system prompts.
+     - Contains utility functions to generate image descriptions and continue conversations based on user inputs and uploaded images.
+     - Automatically downloads and sets up `llama3.1` model for text interaction and `llava:13b` model for image descriptions if not already installed.
 
-2. **describe_an_image.py**: 
-   - **Purpose**: Generates descriptions for provided images using predefined prompts.
+2. **ollama_utils.py**:
+   - **Purpose**: Contains utility functions essential for managing the Ollama service and environment setup.
    - **Functionality**:
-     - Uses the Ollama LLaVa model to generate descriptions.
-     - Supports multiple prompts to generate diverse image descriptions.
-     - Visually displays images in the default viewer for confirmation.
+     - Functions to check the operating system, install Ollama, and manage models.
+     - Includes methods to download and setup Ollama executables and models.
+     - Provides commands to start, stop, and verify the Ollama service.
+     - Manages GPU memory clearance and ensures environmental path correctness for seamless execution.
+     - Checks if the `ollama` service and required models (`llama3.1` for text, `llava:13b` for images) are installed, and downloads them if necessary.
 
-3. **gather_pythons.py**: 
-   - **Purpose**: Collects all Python files from the project's directory.
+3. **templates/index.html**:
+   - **Purpose**: Serves as the front-end template for the Flask web application.
    - **Functionality**:
-     - Searches and excludes specific directories.
-     - Creates a comprehensive report of the directory structure and Python files.
-     - Documents both included and excluded files for clarity.
+     - Provides an interactive UI for users to input messages and upload images.
+     - Displays conversation history in a user-friendly chat format.
+     - Includes a system prompt input field for updating the behavior of the bot.
+     - Handles loading and submission animations for a smoother user experience.
+     - Uses Bootstrap for styling and Prism for syntax highlighting.
 
-4. **ollama_utils.py**: 
-   - **Purpose**: Provides utility functions for managing the Ollama service.
-   - **Functionality**:
-     - Functions for installation, model pulling, and memory clearance.
-     - Service management commands to start and stop Ollama.
-     - Ensures an optimal environment for executing Ollama models.
-
-5. **set_ollama_cache.py**: 
-   - **Purpose**: Manages environment variables and directory linking for model storage.
-   - **Functionality**:
-     - Moves model files to a specified directory.
-     - Creates symbolic links for seamless access to models.
-     - Configures environment variables to reflect the new storage paths.
-
-6. **talk_to_llava.py**: 
-   - **Purpose**: Utilizes the `llava` model to initialize and maintain conversations.
-   - **Functionality**:
-     - Starts the conversation by analyzing an initial image.
-     - Continuously manages the conversation based on user inputs.
-     - Integrates image descriptions and generates text responses.
-
-## Running the Application
+## How to Run the Application
 
 To run the application, follow these steps:
 
@@ -85,30 +62,34 @@ To run the application, follow these steps:
 
 2. **Set Up Ollama**: Ensure Ollama is installed and properly set up on your system. The `ollama_utils.py` file provides functions to install and manage Ollama.
 
-3. **Run the Main Script**: Depending on the functionality you want to test, run any of the following scripts:
-   - **Image Description and Conversation**:
-     ```sh
-     python choose_model.py
-     ```
-   - **Image Description Only**:
-     ```sh
-     python describe_an_image.py
-     ```
+3. **Run the Flask Application**: Start the Flask web server by running the `app.py` script.
+   ```sh
+   python app.py
+   ```
 
-4. **Interact with the Bot**: Follow the on-screen prompts to interact with the bot. You can ask clarifying questions or provide new images, and the bot will respond accordingly.
+4. **Interact with the Bot**: Open your web browser and navigate to `http://localhost:5000`. Use the web interface to interact with the bot by entering messages, uploading images, and updating system prompts.
+
+## Model Setup and Installation
+
+The application will automatically download and set up the necessary models if they are not already installed:
+
+- **Text-Based Model**: `llama3.1`
+- **Image Description Model**: `llava:13b`
+
+These models will be pulled during the initial setup, ensuring seamless execution without manual intervention.
 
 ## Screenshots
 
 Below are screenshots demonstrating the bot's interactions:
 
-### Initial Image Description
-![Initial Image Description](./screenshots/local1.png)
+### Initial Setup and System Prompt Update
+![Initial Setup and System Prompt Update](./screenshots/local1.png)
 
-### User Interaction
-![User Interaction](./screenshots/local2.png)
+### User Interaction and Image Upload
+![User Interaction and Image Upload](./screenshots/local2.png)
 
-These screenshots showcase the bot's ability to describe images and engage in meaningful conversations based on user inputs.
+These screenshots showcase the bot's ability to describe images and engage in conversational interactions based on user inputs.
 
 ## Conclusion
 
-Ollama Image and Conversation Bot is a cutting-edge application that demonstrates the potential of AI in image analysis and interactive dialogue. With its robust architecture, it stands as a versatile tool for both developers and end-users seeking advanced conversational agents.
+Ollama Image and Conversation Bot is a cutting-edge application that demonstrates the potential of AI in image analysis and interactive dialogue. With its robust architecture and intuitive web interface, it stands as a versatile tool for both developers and end-users seeking advanced conversational agents.

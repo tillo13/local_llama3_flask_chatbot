@@ -102,10 +102,10 @@ To run the application, follow these steps:
 Below are screenshots demonstrating the bot's interactions:
 
 ### Initial Image Description
-![Initial Image Description](./screenshots/image1.png)
+![Initial Image Description](./screenshots/local1.png)
 
 ### User Interaction
-![User Interaction](./screenshots/image2.png)
+![User Interaction](./screenshots/local2.png)
 
 These screenshots showcase the bot's ability to describe images and engage in meaningful conversations based on user inputs.
 
